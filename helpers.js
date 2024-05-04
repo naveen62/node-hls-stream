@@ -1,6 +1,9 @@
 const ffmpeg = require("fluent-ffmpeg");
 const  path = require('node:path') 
 const fs = require('node:fs') 
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+ffmpeg.setFfmpegPath(ffmpegPath);
+
 
 const getResolutionBandwidth = (resolution) => {
   if (resolution == "320x180") return "676800";
