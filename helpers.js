@@ -1,9 +1,7 @@
 const ffmpeg = require("fluent-ffmpeg");
-const  path = require('node:path') 
-const fs = require('node:fs') 
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const fs = require("node:fs");
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 ffmpeg.setFfmpegPath(ffmpegPath);
-
 
 const getResolutionBandwidth = (resolution) => {
   if (resolution == "320x180") return "676800";
@@ -45,7 +43,7 @@ const encodeVideo = (path, fileName) => {
             `-vf scale=${resolution}`,
           ])
           .output(`hls/${outputFile}`)
-          .addOptions(["-hls_playlist_type", "vod"]) 
+          .addOptions(["-hls_playlist_type", "vod"])
           .on("end", () => {
             encodedResCount++;
             if (encodedResCount === 3) {
@@ -54,23 +52,23 @@ const encodeVideo = (path, fileName) => {
           })
           .on("error", (err) => reject(err))
           .run();
-          
-          masterPlaylist.push(
-            `#EXT-X-STREAM-INF:BANDWIDTH=${getResolutionBandwidth(
-              resolution,
-            )},RESOLUTION=${resolution}\n${outputFile}`,
-          );
-          if (!fs.existsSync('hls')) {
-            fs.mkdirSync('hls', { recursive: true });
-          }
-          fs.writeFileSync(`hls/${fileName}.m3u8`, masterPlaylist.join("\n"));
+
+        masterPlaylist.push(
+          `#EXT-X-STREAM-INF:BANDWIDTH=${getResolutionBandwidth(
+            resolution
+          )},RESOLUTION=${resolution}\n${outputFile}`
+        );
+        if (!fs.existsSync("hls")) {
+          fs.mkdirSync("hls", { recursive: true });
+        }
+        fs.writeFileSync(`hls/${fileName}.m3u8`, masterPlaylist.join("\n"));
       }
     } catch (error) {
-        reject(error);
+      reject(error);
     }
   });
 };
 
 module.exports = {
-    encodeVideo
-}
+  encodeVideo,
+};
